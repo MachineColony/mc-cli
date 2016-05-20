@@ -114,3 +114,4 @@ def test(timeout):
     finally:
         # restore original bot conf
         shutil.move(temp_file, botfile)
+        os.remove(zip_file)
