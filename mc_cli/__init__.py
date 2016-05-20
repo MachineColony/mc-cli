@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import uuid
 import click
 import shutil
 import logging
@@ -47,8 +48,11 @@ def test():
     bot_conf = json.load(open(botfile, 'r'))
     bot_name = bot_conf['name']
 
+    if 'test_data' not in bot_conf:
+        exit('Please specify the `test_data` to send (in botfile.json)')
+
     # stash original conf
-    temp_file = '/tmp/botfile_{}.json'.format(hash(frozenset(bot_conf.items())))
+    temp_file = '/tmp/botfile_{}.json'.format(uuid.uuid4().hex)
     shutil.copyfile(botfile, temp_file)
 
     # so we don't interfere with production versions
@@ -84,7 +88,9 @@ def test():
 
         # call the bot
         logger.info('Calling bot...')
-        instance.call(bot_webhook_key, {'webhook': public_url}) # TODO specify data
+        test_data = bot_conf['test_data']
+        test_data.update({'webhook': public_url})
+        instance.call(bot_webhook_key, test_data)
 
         logger.info('Waiting for result...')
         echo(result.get())
