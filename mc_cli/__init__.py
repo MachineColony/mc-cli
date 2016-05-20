@@ -34,7 +34,7 @@ def bot():
 
 
 @bot.command()
-@click.option('--timeout', default=60)
+@click.option('--timeout', default=10)
 def test(timeout):
     """test a bot
     this deploys the bot as-is,
@@ -100,7 +100,19 @@ def test(timeout):
 
         logger.info('Waiting for result...')
         try:
-            echo(result.get(timeout))
+            result = json.loads(result.get(timeout))
+            if 'error' in result:
+                logger.error('Exception occurred while executing bot:')
+                logger.error('{}: {}'.format(
+                    result['error']['type'],
+                    result['error']['message']))
+                logger.error('Traceback:')
+                logger.error('\n'.join(result['error']['traceback']))
+                if result['output']:
+                    logger.error('\nBot output:')
+                    logger.error('\n'.join(result['output']))
+            else:
+                echo(result)
         except KeyboardInterrupt:
             pool.terminate()
         else:
