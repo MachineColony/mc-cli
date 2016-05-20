@@ -21,11 +21,11 @@ class API():
             headers=headers,
             json=data, **kwargs)
         self._check_status(resp)
-        return resp.json()
+        return resp
 
     def delete(self, endpoint):
         headers = {'Authorization': self.conf['auth_token']}
-        resp = requests.post(
+        resp = requests.delete(
             '{}{}'.format(self.conf['mc_url'], endpoint),
             headers=headers)
         self._check_status(resp)
@@ -33,7 +33,7 @@ class API():
 
     def hook(self, key, data):
         resp = requests.post(
-            '{}{}'.format(self.conf['mc_hooks_url'], key),
+            '{}/{}'.format(self.conf['mc_hooks_url'], key),
             json=data)
         self._check_status(resp)
         return resp.json()

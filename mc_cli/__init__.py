@@ -48,7 +48,7 @@ def test():
     bot_conf['version'] = '{}_test'.format(bot_conf['version'])
 
     # setup tunnel to public_url for testing webhook
-    public_url, ngrok_proc = testing.start_tunnel(port)
+    public_url = testing.start_tunnel(port)
 
     # write testing bot conf
     json.dump(bot_conf, open(botfile, 'w'))
@@ -59,11 +59,12 @@ def test():
 
         # post to upload endpoint
         echo('Uploading bot...')
-        api.post('/uploads/botfolder',
-                 {'overwrite': True},
+        api.post('/uploads/botfolder', {},
+                 params={'overwrite': True},
                  files={'file1': (os.path.basename(zip_file), open(zip_file, 'rb'))})
 
         # create a bot instance
+        echo('Creating bot instance...')
         bot_data = instance.create(bot_name)
         bot_webhook_key = bot_data['webhook_key']
         bot_id = bot_data['guid']
@@ -74,13 +75,14 @@ def test():
         result = pool.apply_async(testing.await_hook, (port,))
 
         # call the bot
+        echo('Calling bot...')
         instance.call(bot_webhook_key, {'webhook': public_url}) # TODO specify data
 
+        print('Waiting for result...')
         echo(result.get())
 
         # cleanup
         instance.delete(bot_id)
-        ngrok_proc.kill()
 
     # no matter what happens, restore the original conf!
     except:
@@ -89,3 +91,5 @@ def test():
 
         # then re-raise
         raise
+
+    json.dump(bot_conf_orig, open(botfile, 'w'))

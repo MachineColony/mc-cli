@@ -4,7 +4,7 @@ from mc_cli.api import API
 def create(name, **params):
     """create an instance of the bot of type `name`"""
     params['name'] = name
-    return API().post('/botinstances', {'bot_instance': params})
+    return API().post('/botinstances', {'bot_instance': params}).json()
 
 
 def delete(id):
