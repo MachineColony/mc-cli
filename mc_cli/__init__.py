@@ -4,6 +4,7 @@ import json
 import uuid
 import click
 import shutil
+import signal
 import logging
 from click import echo
 from mc_cli.api import API
@@ -33,7 +34,8 @@ def bot():
 
 
 @bot.command()
-def test():
+@click.option('--timeout', default=60)
+def test(timeout):
     """test a bot
     this deploys the bot as-is,
     executes it once,
@@ -83,7 +85,11 @@ def test():
 
         # create webhook endpoint to capture result
         # do it in a separate process
+        # juggle the sigint handler to appropriately terminate with
+        # KeyboardInterrupt
+        sigint_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
         pool = ThreadPool(processes=1)
+        signal.signal(signal.SIGINT, sigint_handler)
         result = pool.apply_async(testing.await_hook, (port,))
 
         # call the bot
@@ -93,7 +99,13 @@ def test():
         instance.call(bot_webhook_key, test_data)
 
         logger.info('Waiting for result...')
-        echo(result.get())
+        try:
+            echo(result.get(timeout))
+        except KeyboardInterrupt:
+            pool.terminate()
+        else:
+            pool.close()
+            pool.join()
 
         # cleanup
         instance.delete(bot_id)
