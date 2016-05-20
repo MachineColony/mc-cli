@@ -48,3 +48,7 @@ class TestRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         request_data = self.rfile.read(int(self.headers.getheader('Content-Length')))
         self.send_response(200)
         self.end_headers()
+
+    def log_message(self, format, *args):
+        # silence the handler
+        return

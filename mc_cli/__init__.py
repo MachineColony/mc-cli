@@ -3,6 +3,7 @@ import sys
 import json
 import click
 import shutil
+import logging
 from click import echo
 from mc_cli.api import API
 from mc_cli.bot import testing, instance
@@ -10,6 +11,8 @@ from multiprocessing.pool import ThreadPool
 
 
 api = API()
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
 
 def exit(reason):
     echo(reason)
@@ -17,8 +20,10 @@ def exit(reason):
 
 
 @click.group()
-def cli():
-    pass
+@click.option('-v', '--verbose', is_flag=True)
+def cli(verbose):
+    if verbose:
+        logger.setLevel(logging.INFO)
 
 
 @cli.group()
@@ -61,13 +66,13 @@ def test():
         zip_file = shutil.make_archive('/tmp/{}'.format(bot_name), 'zip', cwd)
 
         # post to upload endpoint
-        echo('Uploading bot...')
+        logger.info('Uploading bot...')
         api.post('/uploads/botfolder', {},
                  params={'overwrite': True},
                  files={'file1': (os.path.basename(zip_file), open(zip_file, 'rb'))})
 
         # create a bot instance
-        echo('Creating bot instance...')
+        logger.info('Creating bot instance...')
         bot_data = instance.create(bot_name)
         bot_webhook_key = bot_data['webhook_key']
         bot_id = bot_data['guid']
@@ -78,10 +83,10 @@ def test():
         result = pool.apply_async(testing.await_hook, (port,))
 
         # call the bot
-        echo('Calling bot...')
+        logger.info('Calling bot...')
         instance.call(bot_webhook_key, {'webhook': public_url}) # TODO specify data
 
-        print('Waiting for result...')
+        logger.info('Waiting for result...')
         echo(result.get())
 
         # cleanup
