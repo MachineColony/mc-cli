@@ -40,8 +40,11 @@ def test():
         exit('No botfile.json found in current directory.')
 
     bot_conf = json.load(open(botfile, 'r'))
-    bot_conf_orig = bot_conf.copy()
     bot_name = bot_conf['name']
+
+    # stash original conf
+    temp_file = '/tmp/botfile_{}.json'.format(hash(frozenset(bot_conf.items())))
+    shutil.copyfile(botfile, temp_file)
 
     # so we don't interfere with production versions
     # TODO we should have an entirely separate endpoint for testing bots
@@ -85,11 +88,6 @@ def test():
         instance.delete(bot_id)
 
     # no matter what happens, restore the original conf!
-    except:
+    finally:
         # restore original bot conf
-        json.dump(bot_conf_orig, open(botfile, 'w'))
-
-        # then re-raise
-        raise
-
-    json.dump(bot_conf_orig, open(botfile, 'w'))
+        shutil.move(temp_file, botfile)
