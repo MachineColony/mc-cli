@@ -34,6 +34,28 @@ def bot():
 
 
 @bot.command()
+@click.argument('path')
+def define(path):
+    """define a new bot type"""
+    botfile = os.path.join(path, 'botfile.json')
+    if not os.path.exists(botfile):
+        exit('No botfile.json found in the specified directory.')
+
+    bot_conf = json.load(open(botfile, 'r'))
+    bot_name = bot_conf['name']
+
+    # zip current directory
+    zip_file = shutil.make_archive('/tmp/{}'.format(bot_name), 'zip', path)
+
+    # post to upload endpoint
+    logger.info('Uploading bot...')
+    api.post('/uploads/botfolder', {},
+                files={'file1': (os.path.basename(zip_file), open(zip_file, 'rb'))})
+
+
+
+
+@bot.command()
 @click.option('--timeout', default=10)
 def test(timeout):
     """test a bot
