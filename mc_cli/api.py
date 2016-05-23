@@ -14,6 +14,14 @@ class API():
         except ValueError:
             raise ValueError('Couldn\'t parse Machine Colony config at ~/.mc. Malformed JSON?')
 
+    def get(self, endpoint, **kwargs):
+        headers = {'Authorization': self.conf['auth_token']}
+        resp = requests.get(
+            '{}{}'.format(self.conf['mc_url'], endpoint),
+            headers=headers, **kwargs)
+        self._check_status(resp)
+        return resp
+
     def post(self, endpoint, data, **kwargs):
         headers = {'Authorization': self.conf['auth_token']}
         resp = requests.post(
