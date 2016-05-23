@@ -90,6 +90,16 @@ def create(type, config):
 
 
 @bot.command()
+@click.argument('kind', type=click.Choice(['instance', 'type']))
+@click.argument('guid')
+def delete(kind, guid):
+    if kind == 'instance':
+        instance.delete(guid)
+    elif kind == 'type':
+        pass # TODO no delete endpoint, do we want to delete bot types?
+
+
+@bot.command()
 @click.option('--timeout', default=10)
 def test(timeout):
     """test a bot
