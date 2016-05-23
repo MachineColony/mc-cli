@@ -64,6 +64,7 @@ def list(kind, n):
 @click.argument('type')
 @click.option('--config', type=click.Path())
 def create(type, config):
+    """create a new bot instance"""
     if config is not None:
         conf = json.load(open(config, 'r'))
     else:
@@ -75,6 +76,7 @@ def create(type, config):
 @click.argument('kind', type=click.Choice(['instance', 'type']))
 @click.argument('guid')
 def delete(kind, guid):
+    """delete a bot instance"""
     if kind == 'instance':
         instance.delete(guid)
     elif kind == 'type':
