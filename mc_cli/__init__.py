@@ -79,6 +79,17 @@ def list(kind, n):
 
 
 @bot.command()
+@click.argument('type')
+@click.option('--config', type=click.Path())
+def create(type, config):
+    if config is not None:
+        conf = json.load(open(config, 'r'))
+    else:
+        conf = {}
+    instance.create(type, **conf)
+
+
+@bot.command()
 @click.option('--timeout', default=10)
 def test(timeout):
     """test a bot
