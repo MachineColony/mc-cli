@@ -53,6 +53,29 @@ def define(path):
                 files={'file1': (os.path.basename(zip_file), open(zip_file, 'rb'))})
 
 
+@bot.command()
+@click.argument('kind', type=click.Choice(['instances', 'types']))
+@click.option('-n', default=0)
+def list(kind, n):
+    """list bot instances or types"""
+    if kind == 'instances':
+        data = api.get('/me/botinstances').json()
+        n = n if n else len(data)
+        for item in data[:n]:
+            output = '\t'.join([
+                item['guid'],
+                item['type']
+            ])
+            echo(output)
+    elif kind == 'types':
+        data = api.get('/me/bots').json()
+        n = n if n else len(data)
+        for item in data[:n]:
+            output = '\t'.join([
+                item['guid'],
+                item['name']
+            ])
+            echo(output)
 
 
 @bot.command()
