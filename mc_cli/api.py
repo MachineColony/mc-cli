@@ -14,28 +14,32 @@ class API():
         except ValueError:
             raise ValueError('Couldn\'t parse Machine Colony config at ~/.mc. Malformed JSON?')
 
+    def _headers(self):
+        return {
+            'X-API-Key': self.conf['client_key'],
+            'X-API-Secret': self.conf['client_secret']
+        }
+
     def get(self, endpoint, **kwargs):
-        headers = {'Authorization': self.conf['auth_token']}
         resp = requests.get(
             '{}{}'.format(self.conf['mc_url'], endpoint),
-            headers=headers, **kwargs)
+            headers=self._headers(),
+            **kwargs)
         self._check_status(resp)
         return resp
 
     def post(self, endpoint, data, **kwargs):
-        headers = {'Authorization': self.conf['auth_token']}
         resp = requests.post(
             '{}{}'.format(self.conf['mc_url'], endpoint),
-            headers=headers,
+            headers=self._headers(),
             json=data, **kwargs)
         self._check_status(resp)
         return resp
 
     def delete(self, endpoint):
-        headers = {'Authorization': self.conf['auth_token']}
         resp = requests.delete(
             '{}{}'.format(self.conf['mc_url'], endpoint),
-            headers=headers)
+            headers=self._headers())
         self._check_status(resp)
         return resp
 
