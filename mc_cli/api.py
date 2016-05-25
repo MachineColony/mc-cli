@@ -5,7 +5,7 @@ from httplib import HTTPException
 
 
 class API():
-    def __init__(self):
+    def __init__(self, url_key='mc_url'):
         conf_path = os.path.expanduser('~/.mc')
         if not os.path.exists(conf_path):
             raise IOError('No Machine Colony config found at ~/.mc')
@@ -13,6 +13,7 @@ class API():
             self.conf = json.load(open(conf_path, 'r'))
         except ValueError:
             raise ValueError('Couldn\'t parse Machine Colony config at ~/.mc. Malformed JSON?')
+        self.base_url = self.conf[url_key]
 
     def _headers(self):
         return {
@@ -22,7 +23,7 @@ class API():
 
     def get(self, endpoint, **kwargs):
         resp = requests.get(
-            '{}{}'.format(self.conf['mc_url'], endpoint),
+            '{}{}'.format(self.base_url, endpoint),
             headers=self._headers(),
             **kwargs)
         self._check_status(resp)
@@ -30,7 +31,7 @@ class API():
 
     def post(self, endpoint, data, **kwargs):
         resp = requests.post(
-            '{}{}'.format(self.conf['mc_url'], endpoint),
+            '{}{}'.format(self.base_url, endpoint),
             headers=self._headers(),
             json=data, **kwargs)
         self._check_status(resp)
@@ -38,14 +39,14 @@ class API():
 
     def delete(self, endpoint):
         resp = requests.delete(
-            '{}{}'.format(self.conf['mc_url'], endpoint),
+            '{}{}'.format(self.base_url, endpoint),
             headers=self._headers())
         self._check_status(resp)
         return resp
 
     def hook(self, key, data):
         resp = requests.post(
-            '{}/{}'.format(self.conf['mc_hooks_url'], key),
+            '{}/{}'.format(self.base_url, key),
             json=data)
         self._check_status(resp)
         return resp.json()
