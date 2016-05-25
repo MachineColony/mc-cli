@@ -66,7 +66,7 @@ def list(kind, n):
 def create(type, config):
     """create a new bot instance"""
     if config is not None:
-        conf = json.load(open(config, 'r'))
+        conf = json.load(config)
     else:
         conf = {}
     resp = instance.create(type, **conf)
