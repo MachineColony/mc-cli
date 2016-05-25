@@ -16,7 +16,7 @@ def bot():
 
 
 @bot.command()
-@click.argument('path')
+@click.argument('path', type=click.Path())
 def define(path):
     """define a new bot type"""
     botfile = os.path.join(path, 'botfile.json')
@@ -62,14 +62,15 @@ def list(kind, n):
 
 @bot.command()
 @click.argument('type')
-@click.option('--config', type=click.Path())
+@click.option('--config', type=click.File('r'))
 def create(type, config):
     """create a new bot instance"""
     if config is not None:
-        conf = json.load(open(config, 'r'))
+        conf = json.load(config)
     else:
         conf = {}
-    instance.create(type, **conf)
+    resp = instance.create(type, **conf)
+    echo(resp['guid'])
 
 
 @bot.command()
