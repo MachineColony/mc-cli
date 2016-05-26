@@ -85,8 +85,9 @@ def delete(kind, guid):
 
 
 @bot.command()
+@click.argument('path', type=click.Path())
 @click.option('--timeout', default=10)
-def test(timeout):
+def test(path, timeout):
     """test a bot
     this deploys the bot as-is,
     executes it once,
@@ -94,7 +95,7 @@ def test(timeout):
     """
     port = 8181
     cwd = os.getcwd()
-    botfile = os.path.join(cwd, 'botfile.json')
+    botfile = os.path.join(cwd, path, 'botfile.json')
     if not os.path.exists(botfile):
         exit('No botfile.json found in current directory.')
 
