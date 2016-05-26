@@ -46,7 +46,7 @@ class API():
 
     def hook(self, key, data):
         resp = requests.post(
-            '{}/{}'.format(self.base_url, key),
+            '{}/{}'.format(self.conf['mc_hooks_url'], key),
             json=data)
         self._check_status(resp)
         return resp.json()
