@@ -12,6 +12,11 @@ def delete(id):
     return API().delete('/botinstances/{}'.format(id))
 
 
-def call(webhook_key, data):
+def call(webhook_key, data, webhook=None):
     """call a bot with the specified webhook key, sending the specified data"""
-    return API().hook(webhook_key, {'data': data})
+    data = {
+        'data': data
+    }
+    if webhook is not None:
+        data['webhook'] = webhook
+    return API().hook(webhook_key, data)

@@ -146,8 +146,7 @@ def test(timeout):
         # call the bot
         logger.info('Calling bot...')
         test_data = bot_conf['test_data']
-        test_data.update({'webhook': public_url})
-        instance.call(bot_webhook_key, test_data)
+        instance.call(bot_webhook_key, test_data, webhook=public_url)
 
         logger.info('Waiting for result...')
         try:
