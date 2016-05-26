@@ -34,7 +34,7 @@ And then open it up in your favorite editor.
 
 The `botfile.json` is required for a bot and specifies what Machine Colony needs to know to manage and run it.
 
-```json
+```js
 {
     "name": "my_bot",           // name of this bot type
     "version": "0.0.1",         // version number of this bot type
@@ -73,7 +73,7 @@ def main_handler(data):
 
 When a bot is called, such as via a webhook, JSON data can be posted to it in with the following format:
 
-```json
+```js
 {
     "data": {
         "some_key": "some_value"
