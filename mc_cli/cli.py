@@ -9,6 +9,7 @@ from mc_cli.api import API
 api = API()
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
+conf_path = os.path.expanduser('~/.mc')
 
 
 def exit(reason):
@@ -24,13 +25,27 @@ def cli(verbose):
 
 
 @cli.command()
+def init():
+    """initialize the default config"""
+    if os.path.exists(conf_path) \
+        and not click.confirm('A Machine Colony config already exists. Overwrite?'):
+        return
+
+    json.dump({
+        'mc_hooks_url': 'https://hooks.machinecolony.com',
+        'mc_url': 'https://machinecolony.com',
+        'ml_url': 'https://ml.machinecolony.com'
+    }, open(conf_path, 'w'))
+
+
+@cli.command()
 @click.argument('email')
 @click.password_option()
 def auth(email, password):
+    """authenticate with Machine Colony"""
     resp = api.post('/cli-config',
                     {'email': email, 'password': password})
 
-    conf_path = os.path.expanduser('~/.mc')
     if os.path.exists(conf_path):
         conf = json.load(open(conf_path, 'r'))
         if 'client_secret' in conf and 'client_key' in conf\
