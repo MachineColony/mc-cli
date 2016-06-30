@@ -67,8 +67,8 @@ In this file we'll define a function called `main_handler`. When the bot is call
 This bot will be really simple: it will just output the data that it receives:
 
 ```python
-def main_handler(data):
-    return data
+def main_handler(ctx):
+    return ctx
 ```
 
 When a bot is called, such as via a webhook, JSON data can be posted to it in with the following format:
@@ -82,9 +82,9 @@ When a bot is called, such as via a webhook, JSON data can be posted to it in wi
 }
 ```
 
-The values at the `data` key is what is passed in as the `data` parameter to `main_handler`.
+The values at the `data` key is what is passed in at the `data` key in the `ctx` parameter to `main_handler`.
 
-For example, if the example JSON above was sent to the bot, `data` would equal `{"some_key": "some_value"}`.
+For example, if the example JSON above was sent to the bot, `ctx` would equal `{"data": {"some_key": "some_value"}, "user": { (user data) }}`.
 
 ## Testing the bot
 

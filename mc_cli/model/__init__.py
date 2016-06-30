@@ -44,7 +44,8 @@ def create(spec, data):
     spec['data'] = data
 
     resp = mapi.post('/{}/create'.format(model_type), spec)
-    echo(resp.json()['data']['model_id'])
+    resp = resp.json()['data']
+    echo('{}:{}'.format(resp['model_id'], resp['status']))
 
 
 @model.command()
