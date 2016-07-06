@@ -22,6 +22,7 @@ There is an additional dependency for testing bots: [ngrok](https://ngrok.com/do
     "mc_url": "machine colony url",
     "ml_url": "machine colony models url",
     "mc_hooks_url": "machine colony webhook url"
+}
 ```
 
 You can use `mc auth` to authenticate with the API and automatically have your client key and secret added to your config.
