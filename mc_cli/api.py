@@ -6,13 +6,13 @@ from httplib import HTTPException
 
 class API():
     def __init__(self, url_key='mc_url'):
-        conf_path = os.path.expanduser('~/.mc')
+        conf_path = os.path.expanduser('~/.mc/config.json')
         if not os.path.exists(conf_path):
-            raise IOError('No Machine Colony config found at ~/.mc')
+            raise IOError('No Machine Colony config found at ~/.mc/config.json')
         try:
             self.conf = json.load(open(conf_path, 'r'))
         except ValueError:
-            raise ValueError('Couldn\'t parse Machine Colony config at ~/.mc. Malformed JSON?')
+            raise ValueError('Couldn\'t parse Machine Colony config at ~/.mc/config.json. Malformed JSON?')
         self.base_url = self.conf[url_key]
 
     def _headers(self):

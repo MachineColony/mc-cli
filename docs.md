@@ -14,7 +14,7 @@ This will provide the `mc` command:
 
 ## Initial configuration
 
-`mc` looks for a JSON configuration file located at `~/.mc`.
+`mc` looks for a JSON configuration file located at `~/.mc/config.json`.
 
 You can create this file manually, but it's recommended that you start with the default configuration. This can be created by running:
 

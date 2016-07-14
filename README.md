@@ -13,7 +13,7 @@ There is an additional dependency for testing bots: [ngrok](https://ngrok.com/do
 
 ## Configuration
 
-`mc` looks for a JSON configuration file at `~/.mc`. The following are required:
+`mc` looks for a JSON configuration file at `~/.mc/config.json`. The following are required:
 
 ```json
 {

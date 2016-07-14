@@ -9,7 +9,7 @@ from mc_cli.api import API
 api = API()
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
-conf_path = os.path.expanduser('~/.mc')
+conf_path = os.path.expanduser('~/.mc/config.json')
 
 
 def exit(reason):
@@ -46,6 +46,8 @@ def auth(email, password):
     resp = api.post('/cli-config',
                     {'email': email, 'password': password})
 
+    ensure_mc_dir()
+
     if os.path.exists(conf_path):
         conf = json.load(open(conf_path, 'r'))
         if 'client_secret' in conf and 'client_key' in conf\
@@ -55,3 +57,9 @@ def auth(email, password):
         conf = {}
     conf.update(resp.json()['data'])
     json.dump(conf, open(conf_path, 'w'), sort_keys=True, indent=4)
+
+
+def ensure_mc_dir():
+    # Ensure main MC directory exists, i.e. before trying to write the config file
+    if not os.path.exists('~/.mc'):
+        os.mkdir('~/.mc')
