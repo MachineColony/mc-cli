@@ -5,7 +5,7 @@ from httplib import HTTPException
 
 
 class API():
-    def __init__(self, url_key='mc_url'):
+    def __init__(self, url_key='mc_api_url'):
         conf_path = os.path.expanduser('~/.mc/config.json')
         if not os.path.exists(conf_path):
             raise IOError('No Machine Colony config found at ~/.mc/config.json')
@@ -17,8 +17,8 @@ class API():
 
     def _headers(self):
         return {
-            'X-API-Key': self.conf['client_key'],
-            'X-API-Secret': self.conf['client_secret']
+            'X-API-Key': self.conf.get('client_key'),
+            'X-API-Secret': self.conf.get('client_secret')
         }
 
     def get(self, endpoint, **kwargs):

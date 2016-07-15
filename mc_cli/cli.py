@@ -6,10 +6,18 @@ import logging
 from mc_cli.api import API
 
 
+conf_path = os.path.expanduser('~/.mc/config.json')
+
+if not os.path.exists(conf_path):
+    json.dump({
+        'mc_hooks_url': 'https://hooks.machinecolony.com',
+        'mc_api_url': 'https://api.machinecolony.com',
+        'ml_url': 'https://ml.machinecolony.com'
+    }, open(conf_path, 'w'))
+
 api = API()
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
-conf_path = os.path.expanduser('~/.mc/config.json')
 
 
 def exit(reason):
@@ -33,7 +41,7 @@ def init():
 
     json.dump({
         'mc_hooks_url': 'https://hooks.machinecolony.com',
-        'mc_url': 'https://machinecolony.com',
+        'mc_api_url': 'https://api.machinecolony.com',
         'ml_url': 'https://ml.machinecolony.com'
     }, open(conf_path, 'w'))
 
@@ -61,5 +69,6 @@ def auth(email, password):
 
 def ensure_mc_dir():
     # Ensure main MC directory exists, i.e. before trying to write the config file
-    if not os.path.exists('~/.mc'):
-        os.mkdir('~/.mc')
+    mc_dir = os.path.expanduser('~/.mc')
+    if not os.path.exists(mc_dir):
+        os.mkdir(mc_dir)

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='mc-cli',
-    version='0.0.1',
+    version='0.0.4',
     description='Machine Colony command line tools',
     url='https://github.com/machinecolony/mc-cli',
     author='Machine Colony',
