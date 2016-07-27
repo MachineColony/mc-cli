@@ -3,7 +3,12 @@ Command line client and toolkit
 
 ## Installation
 
-still under development, so clone this repo, `cd` into it, then:
+If you just want to use the tool, simply install with:
+
+    pip install mc-cli
+
+
+Otherwise, if developing the tool, clone this repo, `cd` into it, then:
 
     pip install --editable .
 
